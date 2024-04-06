@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchBaseCurrency } from './operations';
 
-const qqq = qqq;
 const initialState = {
   baseCurrency: '',
 };
