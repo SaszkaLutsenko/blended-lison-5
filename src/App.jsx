@@ -1,19 +1,26 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { Header } from 'components';
 import { lazy, useEffect } from 'react';
-import { getUserInfo } from './service';
+
+import { useDispatch } from 'react-redux';
+import { fetchBaseCurrency } from 'reduxState/currency/operations';
+import { setBaseCurrency } from 'reduxState/currency/currencySlice';
 
 const Home = lazy(() => import('pages/Home'));
 const Rates = lazy(() => import('pages/Rates'));
 
 export const App = () => {
+  const dispatch=useDispatch()
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const latitude = pos.coords.latitude;
-      const longitude = pos.coords.longitude;
-      getUserInfo({ latitude, longitude });
-    });
-  }, []);
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    };
+    const success=({coords })=>{dispatch(fetchBaseCurrency(coords))}
+    const error= ()=>{dispatch(setBaseCurrency("USD"))}
+    navigator.geolocation.getCurrentPosition(success, error, options);
+  }, [dispatch]);
 
   return (
     <Routes>
